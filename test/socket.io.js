@@ -7,7 +7,7 @@ var ioc = require('socket.io-client');
 var request = require('supertest');
 var expect = require('expect.js');
 
-// creates a socket.io client for the given server
+// Creates a socket.io client for the given server
 function client(srv, nsp, opts){
   if ('object' == typeof nsp) {
     opts = nsp;
@@ -273,8 +273,9 @@ describe('socket.io', function(){
 
     it('should allow request when origin defined as function and same is supplied', function(done) {
       var sockets = io({ origins: function(origin,callback){
-        if(origin == 'http://foo.example') 
+        if (origin == 'http://foo.example') {
           return callback(null, true);
+        }
         return callback(null, false);
       } }).listen('54016');
       request.get('http://localhost:54016/socket.io/default/')
@@ -288,8 +289,9 @@ describe('socket.io', function(){
 
     it('should allow request when origin defined as function and different is supplied', function(done) {
       var sockets = io({ origins: function(origin,callback){
-        if(origin == 'http://foo.example') 
+        if (origin == 'http://foo.example') {
           return callback(null, true);
+        }
         return callback(null, false);
       } }).listen('54017');
       request.get('http://localhost:54017/socket.io/default/')
@@ -633,6 +635,39 @@ describe('socket.io', function(){
             done();
           });
           socket.send(1337);
+        });
+      });
+    });
+
+    it('should error with null messages', function(done){
+      var srv = http();
+      var sio = io(srv);
+      srv.listen(function(){
+        var socket = client(srv);
+        sio.on('connection', function(s){
+          s.on('message', function(a){
+            expect(a).to.be(null);
+            done();
+          });
+          socket.send(null);
+        });
+      });
+    });
+
+    it('should handle transport null messages', function(done){
+      var srv = http();
+      var sio = io(srv);
+      srv.listen(function(){
+        var socket = client(srv);
+        sio.on('connection', function(s){
+          s.on('error', function(err){
+            expect(err).to.be.an(Error);
+            s.on('disconnect', function(reason){
+              expect(reason).to.be('client error');
+              done();
+            });
+          });
+          s.client.ondata(null);
         });
       });
     });
