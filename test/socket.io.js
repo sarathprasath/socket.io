@@ -51,21 +51,10 @@ describe('socket.io', function(){
       expect(srv.eio.maxHttpBufferSize).to.eql(10);
     });
 
-    it('should be able to set path with setting resource', function(done) {
-      var eio = io();
-      var srv = http();
-
-      eio.set('resource', '/random');
-      eio.attach(srv);
-
-      // Check that the server is accessible through the specified path
-      request(srv)
-      .get('/random/socket.io.js')
-      .buffer(true)
-      .end(function(err, res){
-        if (err) return done(err);
-        done();
-      });
+    it('should be able to set path with setting resource', function() {
+      var srv = io(http());
+      srv.set('resource', '/random');
+      expect(srv.path()).to.be('/random');
     });
 
     it('should be able to set origins to engine.io', function() {
@@ -127,7 +116,7 @@ describe('socket.io', function(){
         expect(s.handshake.time.split(' ').length > 0); // Is "multipart" string representation
 
         // Address, xdomain, secure, issued and url set
-        expect(s.handshake.address).to.be('127.0.0.1');
+        expect(s.handshake.address).to.not.be(undefined);
         expect(s.handshake.xdomain).to.be.a('boolean');
         expect(s.handshake.secure).to.be.a('boolean');
         expect(s.handshake.issued).to.be.a('number');
@@ -172,7 +161,7 @@ describe('socket.io', function(){
         io(srv);
         request(srv)
         .get('/socket.io/socket.io.js')
-        .set('If-None-Match', clientVersion)
+        .set('ETag', clientVersion)
         .end(function(err, res){
           if (err) return done(err);
           expect(res.statusCode).to.be(304);
@@ -270,6 +259,7 @@ describe('socket.io', function(){
           done();
         });
     });
+<<<<<<< HEAD
 
     it('should allow request when origin defined as function and same is supplied', function(done) {
       var sockets = io({ origins: function(origin,callback){
