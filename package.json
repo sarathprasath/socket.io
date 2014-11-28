@@ -22,7 +22,7 @@
     "engine.io": "git://github.com/shrikrishnaholla/engine.io#shrikrishna/28thNovLeakFix",
     "socket.io-parser": "2.2.1",
     "socket.io-client": "Automattic/socket.io-client#05c9632",
-    "socket.io-adapter": "shrikrishnaholla/socket.io-adapter#shrikrishna/28thNovLeakFix",
+    "socket.io-adapter": "git://github.com/shrikrishnaholla/socket.io-adapter#shrikrishna/28thNovLeakFix",
     "has-binary-data": "0.1.1",
     "debug": "0.7.4"
   },
