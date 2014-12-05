@@ -259,7 +259,6 @@ describe('socket.io', function(){
           done();
         });
     });
-<<<<<<< HEAD
 
     it('should allow request when origin defined as function and same is supplied', function(done) {
       var sockets = io({ origins: function(origin,callback){
